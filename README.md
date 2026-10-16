@@ -154,7 +154,8 @@ as the authentication.
 - **Search Console data**: run Search Analytics queries, inspect URLs, and read,
   submit, and sync sitemaps.
 - **Workspace setup**: read a site's brand profile, settings, author profiles,
-  and Usage Limits, and edit them.
+  and Usage Limits. Edit the brand profile, the article settings, the indexing
+  settings, and the author profiles.
 - **Content calendar**: read the topics planned for a site and their scheduled
   days, read the number of keyword searches left for the site, and follow a
   content calendar run.
@@ -206,6 +207,8 @@ return errors for an input that is not correct.
 | `gsc_not_connected`, `gsc_reconnect_required` | The site has no working Search Console connection. |
 | `gsc_permission_denied` | The connected Google account does not have access to the property. |
 | `gsc_owner_permission_required` | A sitemap write needs an Owner or Full user of the property. |
+| `gsc_quota_exceeded` | Google rate limits the Search Console requests. Try again later, after `retryAfterSeconds` when the error has it. In an `inspect_urls` result, each URL after the limit has this error. |
+| `topic_not_in_plan` | The workspace cannot open this calendar topic for now. |
 
 ## Security model
 
