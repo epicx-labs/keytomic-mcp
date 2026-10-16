@@ -178,8 +178,9 @@ Most tools spend no credits. Each `search_keywords` call uses 1 of the
 monthly keyword searches of the site. All members of the site share these
 searches. The result of each call tells you how many searches are left.
 
-In a trial, the content calendar tools return only the topics that the trial
-unlocks. A locked topic gives the `upgrade_required` error.
+Some workspaces can open only some calendar topics for now. For these
+workspaces, the content calendar tools return only the topics that they can
+open.
 
 ## Limits and errors
 
@@ -205,8 +206,6 @@ return errors for an input that is not correct.
 | `gsc_not_connected`, `gsc_reconnect_required` | The site has no working Search Console connection. |
 | `gsc_permission_denied` | The connected Google account does not have access to the property. |
 | `gsc_owner_permission_required` | A sitemap write needs an Owner or Full user of the property. |
-| `upgrade_required` | In a trial, the topic is locked. |
-
 ## Security model
 
 - You sign in with your Keytomic account through OAuth, and you select one
