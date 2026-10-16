@@ -206,6 +206,7 @@ return errors for an input that is not correct.
 | `gsc_not_connected`, `gsc_reconnect_required` | The site has no working Search Console connection. |
 | `gsc_permission_denied` | The connected Google account does not have access to the property. |
 | `gsc_owner_permission_required` | A sitemap write needs an Owner or Full user of the property. |
+
 ## Security model
 
 - You sign in with your Keytomic account through OAuth, and you select one
