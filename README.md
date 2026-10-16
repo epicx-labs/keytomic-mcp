@@ -3,7 +3,8 @@
 Keytomic MCP connects your AI assistant to your Keytomic workspace. Use it in
 Claude, ChatGPT, Cursor, Claude Code, Codex, Gemini CLI, Windsurf, and other
 remote MCP clients. Ask questions about your Google Search Console data, run
-SEO audits of your site, and read the fixes, all in the chat.
+SEO audits of your site, read the fixes, read your content calendar, and do
+keyword research, all in the chat.
 
 The Keytomic MCP server URL is:
 
@@ -134,9 +135,12 @@ as the authentication.
 
 ## Requirements
 
-- A Keytomic workspace on a paid plan. If the workspace is not on a paid plan,
-  or if it is still in Onboarding, the tools return an error with a link
-  to Keytomic.
+- A Keytomic workspace on a paid plan or in a trial. If the workspace has no
+  active plan, or if it is still in Onboarding, the tools return an error with
+  a link to Keytomic.
+- A role in the workspace that gives the permission for the action. Each tool
+  needs a workspace permission for its action. If your role does not give the
+  permission, the tool returns the `permission_denied` error.
 - A Google Search Console property connected to the site, for the Search
   Console tools. The other tools do not need it.
 
@@ -151,6 +155,11 @@ as the authentication.
   submit, and sync sitemaps.
 - **Workspace setup**: read a site's brand profile, settings, author profiles,
   and Usage Limits, and edit them.
+- **Content calendar**: read the topics planned for a site and their scheduled
+  days, read the number of keyword searches left for the site, and follow a
+  content calendar run.
+- **Keyword research**: get related keywords for a seed keyword, with search
+  volume, difficulty, competition, CPC, and the monthly trend.
 
 ## MCP tools
 
@@ -162,15 +171,52 @@ as the authentication.
 | Search Console insights | `get_search_performance`, `list_top_rankings`, `list_new_rankings`, `list_improving`, `list_declining`, `list_low_hanging_fruits`, `list_underperforming`, `list_cannibalization`, `list_zombie_pages`, `list_question_queries` |
 | Search Console data | `search_analytics_query`, `inspect_url`, `inspect_urls`, `get_property`, `list_sitemaps`, `get_sitemap`, `list_sitemap_urls` |
 | Search Console writes | `submit_sitemap`, `sync_sitemaps` |
+| Content calendar | `list_calendar_topics`, `get_calendar_topic`, `get_keyword_search_usage`, `get_content_calendar_progress` |
+| Keyword research | `search_keywords` |
 
-The content calendar tools arrive with the next Keytomic release.
+Most tools spend no credits. Each `search_keywords` call uses 1 of the
+monthly keyword searches of the site. All members of the site share these
+searches. The result of each call tells you how many searches are left.
+
+Some workspaces can open only some calendar topics for now. For these
+workspaces, the content calendar tools return only the topics that they can
+open.
+
+## Limits and errors
+
+- Each user can make 60 tool calls each minute in one workspace. When you go
+  above the limit, the tool returns the `rate_limited` error with
+  `retryAfterSeconds`.
+- A tool error is a JSON object with an `error` code and a `message`. Errors
+  that you can correct in Keytomic also give a link.
+
+The table gives the errors about access, limits, and connections. Tools also
+return errors for an input that is not correct.
+
+| Error code | Cause |
+| --- | --- |
+| `subscription_required` | The workspace has no active plan. |
+| `onboarding_required` | The workspace did not complete Onboarding. |
+| `permission_denied` | Your role in the workspace does not give the permission for the action. |
+| `usage_limit_reached` | The site or workspace used all of a Usage Limit, for example its keyword searches. |
+| `insufficient_credits` | The site does not have sufficient Article Credits or image credits for the action. |
+| `project_spend_locked` | A Spend Lock stops paid actions on the site until the billing cycle ends. |
+| `rate_limited` | You made more than 60 tool calls in one minute. |
+| `workspace_access_revoked` | You are not a member of the workspace now. Connect Keytomic again. |
+| `gsc_not_connected`, `gsc_reconnect_required` | The site has no working Search Console connection. |
+| `gsc_permission_denied` | The connected Google account does not have access to the property. |
+| `gsc_owner_permission_required` | A sitemap write needs an Owner or Full user of the property. |
 
 ## Security model
 
 - You sign in with your Keytomic account through OAuth, and you select one
   workspace. The server reads and writes only the data of that workspace.
 - The connection is a Connected App with these MCP Scopes: `workspace:read`,
-  `workspace:write`, `audit:read`, `audit:run`, `gsc:read`, and `gsc:write`.
+  `workspace:write`, `audit:read`, `audit:run`, `gsc:read`, `gsc:write`,
+  `content:read`, and `content:write`.
+- The `content:write` scope lets the AI assistant do actions that can use
+  credits, for example keyword searches. Keytomic reports the credits that each
+  action used.
 - You can remove the Connected App at any time on the **Connected apps** page
   in Keytomic.
 
