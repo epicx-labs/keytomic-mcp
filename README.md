@@ -217,6 +217,10 @@ return errors for an input that is not correct.
 - The `content:write` scope lets the AI assistant do actions that can use
   credits, for example keyword searches. Keytomic reports the credits that each
   action used.
+- If you connected Keytomic before the content scopes were available, the
+  content calendar tools return an error that Keytomic needs approval. Remove
+  the Connected App on the **Connected apps** page in Keytomic. Then connect
+  Keytomic again and approve all the scopes.
 - You can remove the Connected App at any time on the **Connected apps** page
   in Keytomic.
 
