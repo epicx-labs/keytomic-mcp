@@ -220,10 +220,14 @@ return errors for an input that is not correct.
 - If you connected Keytomic before the content scopes were available, the
   server refuses the content calendar tools with an HTTP 403
   `insufficient_scope` response. Your client shows an authorization or
-  permission error, sometimes with the text "Keytomic needs approval". The
-  other tools continue to operate. Remove the Connected App on the
-  **Connected apps** page in Keytomic. Then connect Keytomic again and approve
-  all the scopes.
+  insufficient scope error, sometimes with the text "Keytomic needs approval".
+  This error is not the `permission_denied` tool error, and a role change does
+  not correct it. The other tools continue to operate. To correct it:
+  1. Sign in to Keytomic again in your client and approve all the scopes. In
+     Claude Code, run `/mcp`, select **keytomic**, and sign in again.
+  2. If the error continues, remove the Connected App on the
+     **Connected apps** page in Keytomic. Then connect Keytomic again and
+     approve all the scopes.
 - You can remove the Connected App at any time on the **Connected apps** page
   in Keytomic.
 
