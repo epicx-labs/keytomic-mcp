@@ -218,9 +218,12 @@ return errors for an input that is not correct.
   credits, for example keyword searches. Keytomic reports the credits that each
   action used.
 - If you connected Keytomic before the content scopes were available, the
-  content calendar tools return an error that Keytomic needs approval. Remove
-  the Connected App on the **Connected apps** page in Keytomic. Then connect
-  Keytomic again and approve all the scopes.
+  server refuses the content calendar tools with an HTTP 403
+  `insufficient_scope` response. Your client shows an authorization or
+  permission error, sometimes with the text "Keytomic needs approval". The
+  other tools continue to operate. Remove the Connected App on the
+  **Connected apps** page in Keytomic. Then connect Keytomic again and approve
+  all the scopes.
 - You can remove the Connected App at any time on the **Connected apps** page
   in Keytomic.
 
