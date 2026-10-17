@@ -32,9 +32,13 @@ Keytomic is a connector in the
 
 You can also add Keytomic as a custom connector:
 
-1. Open **Settings**, then **Connectors**, then **Add custom connector**.
-2. Name it `Keytomic` and paste the server URL `https://app.keytomic.com/mcp`.
-3. Click **Connect**, sign in to Keytomic, and approve.
+1. Open **Customize > Connectors**.
+2. Click **+ Add**, then **Add custom connector**.
+3. Name it `Keytomic` and paste the server URL `https://app.keytomic.com/mcp`.
+   Click **Continue**.
+4. Examine the authentication settings that Claude found. Click **Continue**,
+   then click **Add**.
+5. Click **Connect**, sign in to Keytomic, and approve.
 
 The [Keytomic plugin for Claude](https://github.com/epicx-labs/keytomic-claude-plugin)
 adds the same server and four skills for SEO workflows: Website Audit,
@@ -42,20 +46,30 @@ Search Console review, workspace setup, and content calendar.
 
 ### ChatGPT
 
-1. Open **Settings**, then **Apps & Connectors**. Under **Advanced**, turn on
-   **Developer mode**, then click **Create**.
-2. Name it `Keytomic` and paste `https://app.keytomic.com/mcp` as the MCP
-   server URL.
-3. Save, sign in with your Keytomic account, then select Keytomic from the
-   **+** menu in a chat.
+Full MCP support in ChatGPT is available only on the ChatGPT Business,
+Enterprise, and Edu plans. Use ChatGPT on the web. On a Business plan, an admin
+or owner adds the server. Developer mode is not necessary.
+
+1. Go to **Plugins**.
+2. Click **+**, then click **Add custom MCP server**.
+3. Type the name `Keytomic`.
+4. In **Connection**, paste `https://app.keytomic.com/mcp`.
+5. Select OAuth for the authentication.
+6. Select **I understand and want to continue**.
+7. Click **Create as a plugin**.
+8. Sign in to Keytomic and approve.
+9. Install the plugin. In a new chat, type `@` and select Keytomic.
 
 ### Claude Code
 
 Run this command in your terminal:
 
 ```bash
-claude mcp add --transport http keytomic https://app.keytomic.com/mcp
+claude mcp add --transport http --scope user keytomic https://app.keytomic.com/mcp
 ```
+
+The `--scope user` option makes Keytomic available in all your projects on
+this computer.
 
 Start Claude Code and sign in to Keytomic when it prompts you. You can also run
 `/mcp`, select **keytomic**, and complete the sign-in.
