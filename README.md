@@ -3,8 +3,8 @@
 Keytomic MCP connects your AI assistant to your Keytomic workspace. Use it in
 Claude, ChatGPT, Cursor, Claude Code, Codex, Gemini CLI, Windsurf, and other
 remote MCP clients. Ask questions about your Google Search Console data, run
-SEO audits of your site, read the fixes, read your content calendar, and do
-keyword research, all in the chat.
+SEO audits of your site, read the fixes, do keyword research, plan your
+content calendar, and write and edit articles, all in the chat.
 
 The Keytomic MCP server URL is:
 
@@ -168,11 +168,14 @@ as the authentication.
 - **Search Console data**: run Search Analytics queries, inspect URLs, and read,
   submit, and sync sitemaps.
 - **Workspace setup**: read a site's brand profile, settings, author profiles,
-  and Usage Limits. Edit the brand profile, the article settings, the indexing
-  settings, and the author profiles.
+  Usage Limits, and integrations. Edit the brand profile, the article settings,
+  the indexing settings, and the author profiles.
 - **Content calendar**: read the topics planned for a site and their scheduled
-  days, read the number of keyword searches left for the site, and follow a
-  content calendar run.
+  days, and read the number of keyword searches left for the site. Edit a
+  topic, add topics from keywords or from a title, and start a content
+  calendar run and follow it.
+- **Articles**: write the article of a calendar topic, read it with its SEO
+  fields and its Markdown text, and edit it.
 - **Keyword research**: get related keywords for a seed keyword, with search
   volume, difficulty, competition, CPC, and the monthly trend.
 
@@ -180,18 +183,36 @@ as the authentication.
 
 | Area | Tools |
 | --- | --- |
-| Sites and workspace | `list_sites`, `get_project`, `get_project_settings`, `get_usage` |
+| Sites and workspace | `list_sites`, `get_project`, `get_project_settings`, `get_usage`, `list_integrations` |
 | Workspace edits | `update_brand_profile`, `update_article_settings`, `update_indexing_settings`, `create_author_profile`, `update_author_profile`, `delete_author_profile`, `set_default_author_profile` |
 | SEO Audits | `start_audit`, `watch_audit`, `get_audit`, `list_audits`, `get_audit_category`, `list_audit_findings`, `list_audit_check_rows`, `list_audit_evidence`, `list_audit_pages`, `list_audit_links` |
 | Search Console insights | `get_search_performance`, `list_top_rankings`, `list_new_rankings`, `list_improving`, `list_declining`, `list_low_hanging_fruits`, `list_underperforming`, `list_cannibalization`, `list_zombie_pages`, `list_question_queries` |
 | Search Console data | `search_analytics_query`, `inspect_url`, `inspect_urls`, `get_property`, `list_sitemaps`, `get_sitemap`, `list_sitemap_urls` |
 | Search Console writes | `submit_sitemap`, `sync_sitemaps` |
 | Content calendar | `list_calendar_topics`, `get_calendar_topic`, `get_keyword_search_usage`, `get_content_calendar_progress` |
+| Content calendar edits | `update_calendar_topic`, `add_keywords_to_calendar`, `create_calendar_topic`, `start_content_calendar` |
+| Articles | `get_draft`, `generate_article`, `update_draft` |
 | Keyword research | `search_keywords` |
 
-Most tools spend no credits. Each `search_keywords` call uses 1 of the
-monthly keyword searches of the site. All members of the site share these
-searches. The result of each call tells you how many searches are left.
+Most tools spend no credits. These tools can use the credits of the site:
+
+| Tool | What it uses |
+| --- | --- |
+| `search_keywords` | 1 of the monthly keyword searches of the site |
+| `create_calendar_topic` | 1 of the monthly keyword searches of the site |
+| `start_content_calendar` | 1 of the calendar runs of the billing cycle. If the run plans a topic for today, it also starts that article, which uses 1 article. |
+| `generate_article` | 1 article of the month, or 1 Article Credit when the month limit is reached |
+
+All members of the site share these credits. `get_keyword_search_usage` gives
+the keyword searches that are left, and `get_usage` gives each Usage Limit.
+`start_content_calendar` and `generate_article` first return a plan and start
+nothing. The plan gives the counts before the call. The tools start the work
+only when you call them again with `confirm` set to `true`.
+
+`add_keywords_to_calendar` uses no keyword search. The daily automation writes
+the article of each new topic on its scheduled day, and that article counts
+then. For `add_keywords_to_calendar` and `create_calendar_topic`, the site must
+have articles left this month, or Article Credits, for the new topics.
 
 Some workspaces can open only some calendar topics for now. For these
 workspaces, the content calendar tools return only the topics that they can
@@ -224,29 +245,50 @@ return errors for an input that is not correct.
 | `gsc_quota_exceeded` | Google rate limits the Search Console requests. Try again later, after `retryAfterSeconds` when the error has it. In an `inspect_urls` result, each URL after the limit has this error. |
 | `topic_not_in_plan` | The workspace cannot open this calendar topic for now. |
 
+The content calendar and article tools also return these errors:
+
+| Error code | Cause |
+| --- | --- |
+| `image_studio_setup_required` | Save the Image Studio settings of the site in Keytomic first. |
+| `automation_days_required` | Set the automation days of the site in its automatic blog settings in Keytomic first. |
+| `calendar_run_required` | Run the content calendar of the site once before you add topics. |
+| `brand_profile_incomplete` | Complete the brand profile of the site first. `update_brand_profile` can fill fields. |
+| `brand_profile_review_required` | The workspace owner must confirm the brand profile review in Keytomic. |
+| `active_run_exists` | The site has a content calendar run in progress. |
+| `active_seo_workflow_exists` | An SEO automation run is in progress for the site. Try again after it ends. |
+| `no_calendar_days_left` | The billing cycle has no automation days left for a new run. |
+| `topic_has_article` | The topic has an article, or Keytomic writes its article now. You cannot edit the topic or start a new article for it. |
+| `topic_generation_in_progress` | Keytomic writes the article of this topic now. |
+| `draft_not_found` | The topic has no article yet. |
+| `article_slug_taken` | Another article of the site uses this slug. |
+
 ## Security model
 
 - You sign in with your Keytomic account through OAuth, and you select one
   workspace. The server reads and writes only the data of that workspace.
-- The connection is a Connected App with these MCP Scopes: `workspace:read`,
-  `workspace:write`, `audit:read`, `audit:run`, `gsc:read`, `gsc:write`,
-  `content:read`, and `content:write`.
+- The connection is a Connected App. Keytomic asks for these MCP Scopes:
+  `workspace:read`, `workspace:write`, `audit:read`, `audit:run`, `gsc:read`,
+  `gsc:write`, `content:read`, and `content:write`. On the consent page, you
+  can clear a scope that you do not want to give.
 - The `content:write` scope lets the AI assistant do actions that can use
-  credits, for example keyword searches. Keytomic reports the credits that each
-  action used.
-- If you connected Keytomic before the content scopes were available, the
-  server refuses the content calendar tools with an HTTP 403
-  `insufficient_scope` response. Your client shows an authorization or
+  credits: keyword searches, new topics, content calendar runs, and articles.
+  Keytomic reports the credits that each action used.
+- The edit tools of the workspace and content areas also need the read scope
+  of their area, and `submit_sitemap` also needs `gsc:read`.
+- If the Connected App does not have a scope, the server refuses the tools that
+  need it with an HTTP 403 `insufficient_scope` response. This occurs when
+  you cleared the scope on the consent page, or when you connected Keytomic
+  before the content scopes were available. Your client shows an authorization or
   insufficient scope error, sometimes with the text "Keytomic needs approval".
   This error is not the `permission_denied` tool error, and a role change does
   not correct it. The other tools continue to operate. To correct it:
   1. Sign in to Keytomic again in your client and approve all the scopes. In
      Claude Code, run `/mcp`, select **keytomic**, and sign in again.
-  2. If the error continues, remove the Connected App on the
-     **Connected apps** page in Keytomic. Then connect Keytomic again and
-     approve all the scopes.
-- You can remove the Connected App at any time on the **Connected apps** page
-  in Keytomic.
+  2. If the error continues, open the **Keytomic MCP** page in Keytomic and
+     click **Disconnect** on the row of the app under **Connected apps**. Then
+     connect Keytomic again and approve all the scopes.
+- You can disconnect the Connected App at any time on the **Keytomic MCP**
+  page in Keytomic, under **Connected apps**.
 
 Report vulnerabilities with the process in [SECURITY.md](SECURITY.md).
 
