@@ -4,7 +4,8 @@ Keytomic MCP connects your AI assistant to your Keytomic workspace. Use it in
 Claude, ChatGPT, Cursor, Claude Code, Codex, Gemini CLI, Windsurf, and other
 remote MCP clients. Ask questions about your Google Search Console data, run
 SEO audits of your site, read the fixes, do keyword research, plan your
-content calendar, and write and edit articles, all in the chat.
+content calendar, write and edit articles, and generate their hero images,
+all in the chat.
 
 The Keytomic MCP server URL is:
 
@@ -175,7 +176,9 @@ as the authentication.
   topic, add topics from keywords or from a title, and start a content
   calendar run and follow it.
 - **Articles**: write the article of a calendar topic, read it with its SEO
-  fields and its Markdown text, and edit it.
+  fields and its Markdown text, edit it, and generate a new hero image for it.
+  In clients that support MCP Apps, such as Claude and ChatGPT, the article
+  and the hero image show in the chat.
 - **Keyword research**: get related keywords for a seed keyword, with search
   volume, difficulty, competition, CPC, and the monthly trend.
 
@@ -191,7 +194,7 @@ as the authentication.
 | Search Console writes | `submit_sitemap`, `sync_sitemaps` |
 | Content calendar | `list_calendar_topics`, `get_calendar_topic`, `get_keyword_search_usage`, `get_content_calendar_progress` |
 | Content calendar edits | `update_calendar_topic`, `add_keywords_to_calendar`, `create_calendar_topic`, `start_content_calendar` |
-| Articles | `get_draft`, `generate_article`, `update_draft` |
+| Articles | `get_draft`, `generate_article`, `update_draft`, `generate_hero_image` |
 | Keyword research | `search_keywords` |
 
 Most tools spend no credits. These tools can use the credits of the site:
@@ -202,12 +205,16 @@ Most tools spend no credits. These tools can use the credits of the site:
 | `create_calendar_topic` | 1 of the monthly keyword searches of the site |
 | `start_content_calendar` | 1 of the calendar runs of the billing cycle. If the run plans a topic for today, it also starts that article, which uses 1 article. |
 | `generate_article` | 1 article of the month, or 1 Article Credit when the month limit is reached |
+| `generate_hero_image` | 1 Blog Hero Credit. Keytomic also calls these credits image credits. |
 
 All members of the site share these credits. `get_keyword_search_usage` gives
 the keyword searches that are left, and `get_usage` gives each Usage Limit.
-`start_content_calendar` and `generate_article` first return a plan and start
-nothing. The plan gives the counts before the call. The tools start the work
-only when you call them again with `confirm` set to `true`.
+`start_content_calendar`, `generate_article`, and `generate_hero_image` first
+return a plan and start nothing. The plan gives the counts before the call.
+The tools start the work only when you call them again with `confirm` set to
+`true`. If a `generate_hero_image` call with `confirm` times out, read the
+article with `get_draft` before you call again. The image can still finish,
+and a second call uses a second Blog Hero Credit.
 
 `add_keywords_to_calendar` uses no keyword search. The daily automation writes
 the article of each new topic on its scheduled day, and that article counts
@@ -235,7 +242,7 @@ return errors for an input that is not correct.
 | `onboarding_required` | The workspace did not complete Onboarding. |
 | `permission_denied` | Your role in the workspace does not give the permission for the action. |
 | `usage_limit_reached` | The site or workspace used all of a Usage Limit, for example its keyword searches. |
-| `insufficient_credits` | The site does not have sufficient Article Credits or image credits for the action. |
+| `insufficient_credits` | The site does not have sufficient Article Credits or image credits (Blog Hero Credits) for the action. |
 | `project_spend_locked` | A Spend Lock stops paid actions on the site until the billing cycle ends. |
 | `rate_limited` | You made more than 60 tool calls in one minute. |
 | `workspace_access_revoked` | You are not a member of the workspace now. Connect Keytomic again. |
@@ -271,7 +278,8 @@ The content calendar and article tools also return these errors:
   `gsc:write`, `content:read`, and `content:write`. On the consent page, you
   can clear a scope that you do not want to give.
 - The `content:write` scope lets the AI assistant do actions that can use
-  credits: keyword searches, new topics, content calendar runs, and articles.
+  credits: keyword searches, new topics, content calendar runs, articles, and
+  hero images.
   Keytomic reports the credits that each action used.
 - The edit tools of the workspace and content areas also need the read scope
   of their area, and `submit_sitemap` also needs `gsc:read`.
