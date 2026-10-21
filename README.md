@@ -178,7 +178,9 @@ as the authentication.
 - **Articles**: write the article of a calendar topic, read it with its SEO
   fields and its Markdown text, edit it, and generate a new hero image for it.
   In clients that support MCP Apps, such as Claude and ChatGPT, the article
-  and the hero image show in the chat.
+  and the hero image show in the chat. When your connection can edit content,
+  you can edit the title and the text of the article in the chat and save
+  them, or select text and ask the assistant to change it.
 - **Keyword research**: get related keywords for a seed keyword, with search
   volume, difficulty, competition, CPC, and the monthly trend.
 
