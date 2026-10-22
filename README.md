@@ -108,8 +108,14 @@ claude plugin install keytomic --marketplace epicx-labs/keytomic-claude-plugin
 
 ### Cursor
 
-1. Open **Cursor Settings**, then **MCP**, then **Add new MCP server**.
-2. Add this to your `mcp.json`:
+[![Add Keytomic MCP to Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=keytomic&config=eyJ1cmwiOiJodHRwczovL2FwcC5rZXl0b21pYy5jb20vbWNwIn0=)
+
+Click **Add Keytomic MCP to Cursor**, then sign in to Keytomic when Cursor asks.
+You can also add the server yourself:
+
+1. Open `~/.cursor/mcp.json` for all your projects, or `.cursor/mcp.json` for
+   one project.
+2. Add this to the file:
 
    ```json
    {
@@ -122,6 +128,9 @@ claude plugin install keytomic --marketplace epicx-labs/keytomic-claude-plugin
    ```
 
 3. Sign in to Keytomic when Cursor asks.
+
+The [AI SEO with Keytomic for Cursor](https://github.com/epicx-labs/keytomic-cursor-plugin)
+plugin adds the same server and the four skills to Cursor.
 
 ### Codex
 
@@ -332,6 +341,7 @@ Report vulnerabilities with the process in [SECURITY.md](SECURITY.md).
 - [Keytomic MCP](https://keytomic.com/mcp)
 - [Keytomic in the Claude directory](https://claude.ai/directory/keytomic)
 - [AI SEO with Keytomic, the plugin for Claude](https://github.com/epicx-labs/keytomic-claude-plugin)
+- [AI SEO with Keytomic for Cursor](https://github.com/epicx-labs/keytomic-cursor-plugin)
 - [Keytomic](https://keytomic.com)
 - [Privacy policy](https://keytomic.com/privacy-policy)
 - Support: [hi@keytomic.com](mailto:hi@keytomic.com)
