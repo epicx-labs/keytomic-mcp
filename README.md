@@ -1,11 +1,11 @@
 # Keytomic MCP
 
-Keytomic MCP connects your AI assistant to your Keytomic workspace. Use it in
-Claude, ChatGPT, Cursor, Claude Code, Codex, Gemini CLI, Windsurf, and other
-remote MCP clients. Ask questions about your Google Search Console data, run
-SEO audits of your site, read the fixes, do keyword research, plan your
-content calendar, write and edit articles, and generate their hero images,
-all in the chat.
+Keytomic MCP brings Keytomic's AI SEO automation to your AI assistant and
+connects it to your Keytomic workspace. Use it in Claude, ChatGPT, Cursor,
+Claude Code, Codex, Gemini CLI, Windsurf, and other remote MCP clients. Ask
+questions about your Google Search Console data, run SEO audits of your site,
+read the fixes, do keyword research, plan your content calendar, write and
+edit articles, and generate their hero images, all in the chat.
 
 The Keytomic MCP server URL is:
 
@@ -41,9 +41,10 @@ You can also add Keytomic as a custom connector:
    then click **Add**.
 5. Click **Connect**, sign in to Keytomic, and approve.
 
-The [Keytomic plugin for Claude](https://github.com/epicx-labs/keytomic-claude-plugin)
-adds the same server and four skills for SEO workflows: Website Audit,
-Search Console review, workspace setup, and content calendar.
+The [AI SEO with Keytomic](https://github.com/epicx-labs/keytomic-claude-plugin)
+plugin for Claude adds the same server and four skills: SEO audits, Search
+Console review, workspace setup, and the content calendar with keyword
+research, articles, and hero images.
 
 ### ChatGPT
 
@@ -75,7 +76,8 @@ this computer.
 Start Claude Code and sign in to Keytomic when it prompts you. You can also run
 `/mcp`, select **keytomic**, and complete the sign-in.
 
-To install the Keytomic plugin with its four skills, run this command:
+To install the AI SEO with Keytomic plugin with its four skills, run this
+command:
 
 ```bash
 claude plugin install keytomic --marketplace epicx-labs/keytomic-claude-plugin
@@ -306,7 +308,7 @@ Report vulnerabilities with the process in [SECURITY.md](SECURITY.md).
 
 - [Keytomic MCP](https://keytomic.com/mcp)
 - [Keytomic in the Claude directory](https://claude.ai/directory/keytomic)
-- [Keytomic plugin for Claude](https://github.com/epicx-labs/keytomic-claude-plugin)
+- [AI SEO with Keytomic, the plugin for Claude](https://github.com/epicx-labs/keytomic-claude-plugin)
 - [Keytomic](https://keytomic.com)
 - [Privacy policy](https://keytomic.com/privacy-policy)
 - Support: [hi@keytomic.com](mailto:hi@keytomic.com)
