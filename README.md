@@ -4,8 +4,9 @@ Keytomic MCP brings Keytomic, the end-to-end AI SEO agent, to your AI
 assistant and connects it to your Keytomic workspace. Use it in Claude,
 ChatGPT, Cursor, Claude Code, Codex, Gemini CLI, Windsurf, and other remote MCP
 clients. Ask questions about your Google Search Console data, run SEO audits of
-your site, read the fixes, do keyword research, plan your content calendar,
-write and edit articles, and generate their hero images, all in the chat.
+your site, read the fixes, read your Google Analytics traffic, do keyword
+research, plan your content calendar, write and edit articles, generate their
+hero images, and publish them to your CMS, all in the chat.
 
 The Keytomic MCP server URL is:
 
@@ -65,9 +66,9 @@ You can also add Keytomic as a custom connector:
 5. Click **Connect**, sign in to Keytomic, and approve.
 
 The [AI SEO with Keytomic](https://github.com/epicx-labs/keytomic-claude-plugin)
-plugin for Claude adds the same server and four skills: SEO audits, Search
-Console review, workspace setup, and the content calendar with keyword
-research, articles, and hero images.
+plugin for Claude adds the same server and six skills: SEO audits, Search
+Console review, Google Analytics, workspace setup, the content calendar with
+keyword research, articles, and hero images, and publishing.
 
 ### ChatGPT
 
@@ -99,7 +100,7 @@ this computer.
 Start Claude Code and sign in to Keytomic when it prompts you. You can also run
 `/mcp`, select **keytomic**, and complete the sign-in.
 
-To install the AI SEO with Keytomic plugin with its four skills, run this
+To install the AI SEO with Keytomic plugin with its six skills, run this
 command:
 
 ```bash
@@ -108,8 +109,14 @@ claude plugin install keytomic --marketplace epicx-labs/keytomic-claude-plugin
 
 ### Cursor
 
-1. Open **Cursor Settings**, then **MCP**, then **Add new MCP server**.
-2. Add this to your `mcp.json`:
+[![Add Keytomic MCP to Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=keytomic&config=eyJ1cmwiOiJodHRwczovL2FwcC5rZXl0b21pYy5jb20vbWNwIn0=)
+
+Click **Add Keytomic MCP to Cursor**, then sign in to Keytomic when Cursor asks.
+You can also add the server yourself:
+
+1. Open `~/.cursor/mcp.json` for all your projects, or `.cursor/mcp.json` for
+   one project.
+2. Add this to the file:
 
    ```json
    {
@@ -122,6 +129,9 @@ claude plugin install keytomic --marketplace epicx-labs/keytomic-claude-plugin
    ```
 
 3. Sign in to Keytomic when Cursor asks.
+
+The [AI SEO with Keytomic for Cursor](https://github.com/epicx-labs/keytomic-cursor-plugin)
+plugin adds the same server and the six skills to Cursor.
 
 ### Codex
 
@@ -182,7 +192,11 @@ as the authentication.
   needs a workspace permission for its action. If your role does not give the
   permission, the tool returns the `permission_denied` error.
 - A Google Search Console property connected to the site, for the Search
-  Console tools. The other tools do not need it.
+  Console tools, and a Google Analytics 4 property, for the analytics tools.
+  The other tools do not need them.
+- A publishing destination connected to the site in Keytomic, such as
+  WordPress, Webflow, Shopify, Framer, Contentful, Notion, GoHighLevel, a
+  webhook, or an API destination, for the publishing tools.
 
 ## What this server does
 
@@ -193,6 +207,9 @@ as the authentication.
   and question queries.
 - **Search Console data**: run Search Analytics queries, inspect URLs, and read,
   submit, and sync sitemaps.
+- **Google Analytics**: read the GA4 users, sessions, new users, bounce rate,
+  traffic sources, top pages, and countries of a site, also for organic or AI
+  assistant traffic only, and its events and key events.
 - **Workspace setup**: read a site's brand profile, settings, author profiles,
   Usage Limits, and integrations. Edit the brand profile, the article settings,
   the indexing settings, and the author profiles.
@@ -206,6 +223,9 @@ as the authentication.
   and the hero image show in the chat. When your connection can edit content,
   you can edit the title and the text of the article in the chat and save
   them, or select text and ask the assistant to change it.
+- **Publishing**: list the publishing destinations of a site, publish an
+  article to one of them as a draft or live, and check where each article was
+  published.
 - **Keyword research**: get related keywords for a seed keyword, with search
   volume, difficulty, competition, CPC, and the monthly trend.
 
@@ -222,6 +242,8 @@ as the authentication.
 | Content calendar | `list_calendar_topics`, `get_calendar_topic`, `get_keyword_search_usage`, `get_content_calendar_progress` |
 | Content calendar edits | `update_calendar_topic`, `add_keywords_to_calendar`, `create_calendar_topic`, `start_content_calendar` |
 | Articles | `get_draft`, `generate_article`, `update_draft`, `generate_hero_image` |
+| Publishing | `list_publishing_destinations`, `publish_draft`, `get_publication_status` |
+| Google Analytics | `get_analytics_performance`, `list_analytics_events` |
 | Keyword research | `search_keywords` |
 
 Most tools spend no credits. These tools can use the credits of the site:
@@ -242,6 +264,13 @@ The tools start the work only when you call them again with `confirm` set to
 `true`. If a `generate_hero_image` call with `confirm` times out, read the
 article with `get_draft` before you call again. The image can still finish,
 and a second call uses a second Blog Hero Credit.
+
+`publish_draft` uses no credit. The first send of an article to a destination
+in a mode uses 1 of the daily publishes of the site. A repeat after a
+succeeded publish uses none. Ask before each call: a publish writes to your
+CMS, and mode `publish` makes the article live. Most calls first return a plan
+that you confirm with `confirm` set to `true`. If a publish times out, read `get_publication_status` before you call
+again.
 
 `add_keywords_to_calendar` uses no keyword search. The daily automation writes
 the article of each new topic on its scheduled day, and that article counts
@@ -278,6 +307,9 @@ return errors for an input that is not correct.
 | `gsc_owner_permission_required` | A sitemap write needs an Owner or Full user of the property. |
 | `gsc_quota_exceeded` | Google rate limits the Search Console requests. Try again later, after `retryAfterSeconds` when the error has it. In an `inspect_urls` result, each URL after the limit has this error. |
 | `topic_not_in_plan` | The workspace cannot open this calendar topic for now. |
+| `ga4_not_connected`, `ga4_reconnect_required` | The site has no working Google Analytics connection. The error gives a `connectUrl`. |
+| `ga4_permission_denied` | The connected Google account does not have access to the GA4 property. The error gives a `connectUrl`. |
+| `ga4_quota_exceeded` | Google rate limits the Analytics requests. Try again after `retryAfterSeconds`. |
 
 The content calendar and article tools also return these errors:
 
@@ -296,20 +328,36 @@ The content calendar and article tools also return these errors:
 | `draft_not_found` | The topic has no article yet. |
 | `article_slug_taken` | Another article of the site uses this slug. |
 
+The publishing tools also return these errors:
+
+| Error code | Cause |
+| --- | --- |
+| `publishing_destination_unavailable` | The destination was removed, needs a reconnect, or belongs to another site. |
+| `destination_setup_required` | The destination needs a setting in Keytomic before it can take a publish. |
+| `draft_mode_not_supported` | The destination cannot keep a draft. Publish with mode `publish`. |
+| `publication_in_progress` | A publish of this article to this destination has not ended. Check it with `get_publication_status`. |
+| `publish_failed` | The destination did not confirm the publish, so the article may or may not be there. |
+| `article_slug_taken` | Another article of the site uses this slug. Change the slug with `update_draft`. |
+
 ## Security model
 
 - You sign in with your Keytomic account through OAuth, and you select one
   workspace. The server reads and writes only the data of that workspace.
 - The connection is a Connected App. Keytomic asks for these MCP Scopes:
   `workspace:read`, `workspace:write`, `audit:read`, `audit:run`, `gsc:read`,
-  `gsc:write`, `content:read`, and `content:write`. On the consent page, you
-  can clear a scope that you do not want to give.
+  `gsc:write`, `content:read`, `content:write`, `content:publish`, and
+  `analytics:read`. On the consent page, you can clear a scope that you do not
+  want to give.
 - The `content:write` scope lets the AI assistant do actions that can use
   credits: keyword searches, new topics, content calendar runs, articles, and
   hero images.
   Keytomic reports the credits that each action used.
+- The `content:publish` scope lets the AI assistant publish articles to your
+  connected CMS. The `analytics:read` scope lets it read your Google Analytics
+  data.
 - The edit tools of the workspace and content areas also need the read scope
-  of their area, and `submit_sitemap` also needs `gsc:read`.
+  of their area, `submit_sitemap` also needs `gsc:read`, and `publish_draft`
+  also needs `content:read`.
 - If the Connected App does not have a scope, the server refuses the tools that
   need it with an HTTP 403 `insufficient_scope` response. This occurs when
   you cleared the scope on the consent page, or when you connected Keytomic
@@ -332,6 +380,7 @@ Report vulnerabilities with the process in [SECURITY.md](SECURITY.md).
 - [Keytomic MCP](https://keytomic.com/mcp)
 - [Keytomic in the Claude directory](https://claude.ai/directory/keytomic)
 - [AI SEO with Keytomic, the plugin for Claude](https://github.com/epicx-labs/keytomic-claude-plugin)
+- [AI SEO with Keytomic for Cursor](https://github.com/epicx-labs/keytomic-cursor-plugin)
 - [Keytomic](https://keytomic.com)
 - [Privacy policy](https://keytomic.com/privacy-policy)
 - Support: [hi@keytomic.com](mailto:hi@keytomic.com)
