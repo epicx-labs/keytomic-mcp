@@ -4,9 +4,11 @@ Keytomic MCP brings Keytomic, the end-to-end AI SEO agent, to your AI
 assistant and connects it to your Keytomic workspace. Use it in Claude,
 ChatGPT, Cursor, Claude Code, Codex, Gemini CLI, Windsurf, and other remote MCP
 clients. Ask questions about your Google Search Console data, run SEO audits of
-your site, read the fixes, read your Google Analytics traffic, do keyword
-research, plan your content calendar, write and edit articles, generate their
-hero images, and publish them to your CMS, all in the chat.
+your site, read the fixes, read your Google Analytics traffic, and do keyword
+research. Plan your content calendar, write and edit articles, generate their
+hero images, and publish them to your CMS. Get your pages indexed on Google
+and Bing, read your backlinks, find Reddit threads to answer, and track how AI
+search mentions your brand. You do all of this in the chat.
 
 The Keytomic MCP server URL is:
 
@@ -66,9 +68,11 @@ You can also add Keytomic as a custom connector:
 5. Click **Connect**, sign in to Keytomic, and approve.
 
 The [AI SEO with Keytomic](https://github.com/epicx-labs/keytomic-claude-plugin)
-plugin for Claude adds the same server and six skills: SEO audits, Search
-Console review, Google Analytics, workspace setup, the content calendar with
-keyword research, articles, and hero images, and publishing.
+plugin for Claude adds the same server and ten skills. The skills are SEO
+audits, Search Console review, Google Analytics, workspace setup, the content
+calendar with keyword research, articles, and hero images, and publishing.
+The other skills are indexing, backlinks, Reddit Opportunities, and AI
+Visibility.
 
 ### ChatGPT
 
@@ -100,7 +104,7 @@ this computer.
 Start Claude Code and sign in to Keytomic when it prompts you. You can also run
 `/mcp`, select **keytomic**, and complete the sign-in.
 
-To install the AI SEO with Keytomic plugin with its six skills, run this
+To install the AI SEO with Keytomic plugin with its ten skills, run this
 command:
 
 ```bash
@@ -131,7 +135,7 @@ You can also add the server yourself:
 3. Sign in to Keytomic when Cursor asks.
 
 The [AI SEO with Keytomic for Cursor](https://github.com/epicx-labs/keytomic-cursor-plugin)
-plugin adds the same server and the six skills to Cursor.
+plugin adds the same server and the ten skills to Cursor.
 
 ### Codex
 
@@ -193,7 +197,8 @@ as the authentication.
   permission, the tool returns the `permission_denied` error.
 - A Google Search Console property connected to the site, for the Search
   Console tools, and a Google Analytics 4 property, for the analytics tools.
-  The other tools do not need them.
+  The indexing tools use the Google Search Console and Bing Webmaster Tools
+  connections of the site. The other tools do not need them.
 - A publishing destination connected to the site in Keytomic, such as
   WordPress, Webflow, Shopify, Framer, Contentful, Notion, GoHighLevel, a
   webhook, or an API destination, for the publishing tools.
@@ -203,16 +208,19 @@ as the authentication.
 - **SEO Audits**: start an audit of a site, follow it to the end, and read the
   findings by category, with the affected pages and the recommended fix.
 - **Search Console insights**: find the top, new, improving, and declining
-  queries and pages, low-hanging fruits, keyword cannibalization, zombie pages,
-  and question queries.
-- **Search Console data**: run Search Analytics queries, inspect URLs, and read,
-  submit, and sync sitemaps.
+  queries and pages, low-hanging fruits, underperforming pages, keyword
+  cannibalization, zombie pages, and question queries.
+- **Search Console data**: run Search Analytics queries, and read the sitemaps
+  of the property and the URLs in a sitemap.
+- **Indexing**: read the indexing status of the posts that Keytomic published,
+  on Google and Bing, inspect up to 50 URLs live, and submit URLs or sitemaps
+  to Google and Bing.
 - **Google Analytics**: read the GA4 users, sessions, new users, bounce rate,
   traffic sources, top pages, and countries of a site, also for organic or AI
   assistant traffic only, and its events and key events.
 - **Workspace setup**: read a site's brand profile, settings, author profiles,
-  Usage Limits, and integrations. Edit the brand profile, the article settings,
-  the indexing settings, and the author profiles.
+  Usage Limits, and integrations. Edit the brand profile, the site settings
+  (article and indexing settings), and the author profiles.
 - **Content calendar**: read the topics planned for a site and their scheduled
   days, and read the number of keyword searches left for the site. Edit a
   topic, add topics from keywords or from a title, and start a content
@@ -228,23 +236,40 @@ as the authentication.
   published.
 - **Keyword research**: get related keywords for a seed keyword, with search
   volume, difficulty, competition, CPC, and the monthly trend.
+- **Backlinks**: read the saved backlinks of a site and the backlink gaps
+  against your competitors, with an outreach draft for each gap. Set the
+  competitor domains.
+- **Reddit Opportunities**: read the Reddit threads that the daily scans found,
+  start a scan, write a reply draft, and change the status of a thread.
+  Nothing posts to Reddit: you copy the reply and post it.
+- **AI Visibility**: set up and read how AI platforms mention your brand, edit
+  the prompts and the settings, start a check, and read the report.
 
 ## MCP tools
 
 | Area | Tools |
 | --- | --- |
-| Sites and workspace | `list_sites`, `get_project`, `get_project_settings`, `get_usage`, `list_integrations` |
-| Workspace edits | `update_brand_profile`, `update_article_settings`, `update_indexing_settings`, `create_author_profile`, `update_author_profile`, `delete_author_profile`, `set_default_author_profile` |
-| SEO Audits | `start_audit`, `watch_audit`, `get_audit`, `list_audits`, `get_audit_category`, `list_audit_findings`, `list_audit_check_rows`, `list_audit_evidence`, `list_audit_pages`, `list_audit_links` |
-| Search Console insights | `get_search_performance`, `list_top_rankings`, `list_new_rankings`, `list_improving`, `list_declining`, `list_low_hanging_fruits`, `list_underperforming`, `list_cannibalization`, `list_zombie_pages`, `list_question_queries` |
-| Search Console data | `search_analytics_query`, `inspect_url`, `inspect_urls`, `get_property`, `list_sitemaps`, `get_sitemap`, `list_sitemap_urls` |
-| Search Console writes | `submit_sitemap`, `sync_sitemaps` |
-| Content calendar | `list_calendar_topics`, `get_calendar_topic`, `get_keyword_search_usage`, `get_content_calendar_progress` |
+| Sites and workspace | `list_sites`, `get_project` |
+| Workspace edits | `update_brand_profile`, `update_project_settings`, `save_author_profile`, `delete_author_profile` |
+| SEO Audits | `start_audit`, `watch_audit`, `get_audit`, `list_audits`, `list_audit_findings`, `list_audit_rows`, `list_audit_pages`, `list_audit_links` |
+| Search Console insights | `get_search_performance`, `get_search_insight` |
+| Search Console data | `search_analytics_query`, `list_sitemaps`, `list_sitemap_urls` |
+| Indexing | `get_indexing_status`, `inspect_urls`, `submit_for_indexing` |
+| Content calendar | `list_calendar_topics`, `get_content_calendar_progress` |
 | Content calendar edits | `update_calendar_topic`, `add_keywords_to_calendar`, `create_calendar_topic`, `start_content_calendar` |
 | Articles | `get_draft`, `generate_article`, `update_draft`, `generate_hero_image` |
-| Publishing | `list_publishing_destinations`, `publish_draft`, `get_publication_status` |
+| Publishing | `publish_draft`, `get_publication_status` |
 | Google Analytics | `get_analytics_performance`, `list_analytics_events` |
 | Keyword research | `search_keywords` |
+| Backlinks | `get_backlinks`, `set_backlink_competitors` |
+| Reddit Opportunities | `get_reddit_settings`, `list_reddit_threads`, `update_reddit_settings`, `set_reddit_opportunity_status`, `scan_reddit`, `generate_reddit_reply` |
+| AI Visibility | `get_visibility`, `get_visibility_report`, `add_visibility_prompts`, `update_visibility_prompt`, `update_visibility_settings`, `start_visibility_setup`, `start_visibility_check` |
+
+`get_project` returns a site in sections: `profile`, `settings`, `usage`,
+`integrations`, `destinations`, `property`, and `keywordSearches`.
+`get_search_insight` answers one question for each `kind`: `top_rankings`,
+`new_rankings`, `improving`, `declining`, `low_hanging_fruits`,
+`underperforming`, `cannibalization`, `zombie_pages`, or `question_queries`.
 
 Most tools spend no credits. These tools can use the credits of the site:
 
@@ -255,11 +280,13 @@ Most tools spend no credits. These tools can use the credits of the site:
 | `start_content_calendar` | 1 of the calendar runs of the billing cycle. If the run plans a topic for today, it also starts that article, which uses 1 article. |
 | `generate_article` | 1 article of the month, or 1 Article Credit when the month limit is reached |
 | `generate_hero_image` | 1 Blog Hero Credit. Keytomic also calls these credits image credits. |
+| `start_visibility_check` | 1 AI Visibility observation of the month for each Active prompt on each AI platform |
 
-All members of the site share these credits. `get_keyword_search_usage` gives
-the keyword searches that are left, and `get_usage` gives each Usage Limit.
-`start_content_calendar`, `generate_article`, and `generate_hero_image` first
-return a plan and start nothing. The plan gives the counts before the call.
+All members of the site share these credits. The `keywordSearches` section of
+`get_project` gives the keyword searches that are left, and the `usage`
+section gives each Usage Limit. `start_content_calendar`, `generate_article`,
+`generate_hero_image`, and `start_visibility_check` first return a plan and
+start nothing. The plan gives the counts before the call.
 The tools start the work only when you call them again with `confirm` set to
 `true`. If a `generate_hero_image` call with `confirm` times out, read the
 article with `get_draft` before you call again. The image can still finish,
@@ -271,6 +298,10 @@ succeeded publish uses none. Ask before each call: a publish writes to your
 CMS, and mode `publish` makes the article live. Most calls first return a plan
 that you confirm with `confirm` set to `true`. If a publish times out, read `get_publication_status` before you call
 again.
+
+Keytomic pays for `start_visibility_setup` and `scan_reddit`. A site can start
+one Reddit scan each UTC day, and the daily scan runs on its schedule.
+`generate_reddit_reply` makes one AI call.
 
 `add_keywords_to_calendar` uses no keyword search. The daily automation writes
 the article of each new topic on its scheduled day, and that article counts
@@ -304,12 +335,13 @@ return errors for an input that is not correct.
 | `workspace_access_revoked` | You are not a member of the workspace now. Connect Keytomic again. |
 | `gsc_not_connected`, `gsc_reconnect_required` | The site has no working Search Console connection. |
 | `gsc_permission_denied` | The connected Google account does not have access to the property. |
-| `gsc_owner_permission_required` | A sitemap write needs an Owner or Full user of the property. |
+| `gsc_owner_permission_required` | A sitemap submit to Google needs an Owner or Full user of the property. |
 | `gsc_quota_exceeded` | Google rate limits the Search Console requests. Try again later, after `retryAfterSeconds` when the error has it. In an `inspect_urls` result, each URL after the limit has this error. |
 | `topic_not_in_plan` | The workspace cannot open this calendar topic for now. |
 | `ga4_not_connected`, `ga4_reconnect_required` | The site has no working Google Analytics connection. The error gives a `connectUrl`. |
 | `ga4_permission_denied` | The connected Google account does not have access to the GA4 property. The error gives a `connectUrl`. |
 | `ga4_quota_exceeded` | Google rate limits the Analytics requests. Try again after `retryAfterSeconds`. |
+| `feature_disabled` | AI Visibility is not available. The AI Visibility tools return this error. |
 
 The content calendar and article tools also return these errors:
 
@@ -345,19 +377,24 @@ The publishing tools also return these errors:
   workspace. The server reads and writes only the data of that workspace.
 - The connection is a Connected App. Keytomic asks for these MCP Scopes:
   `workspace:read`, `workspace:write`, `audit:read`, `audit:run`, `gsc:read`,
-  `gsc:write`, `content:read`, `content:write`, `content:publish`, and
-  `analytics:read`. On the consent page, you can clear a scope that you do not
-  want to give.
+  `content:read`, `content:write`, `content:publish`, `analytics:read`,
+  `indexing:write`, `visibility:read`, and `visibility:write`. On the consent
+  page, you can clear a scope that you do not want to give.
 - The `content:write` scope lets the AI assistant do actions that can use
   credits: keyword searches, new topics, content calendar runs, articles, and
   hero images.
   Keytomic reports the credits that each action used.
 - The `content:publish` scope lets the AI assistant publish articles to your
   connected CMS. The `analytics:read` scope lets it read your Google Analytics
-  data.
-- The edit tools of the workspace and content areas also need the read scope
-  of their area, `submit_sitemap` also needs `gsc:read`, and `publish_draft`
-  also needs `content:read`.
+  and Bing Webmaster data.
+- The `indexing:write` scope lets the AI assistant submit URLs and sitemaps to
+  Google and Bing. The indexing read tools read Google data with `gsc:read`
+  and Bing data with `analytics:read`.
+- The `visibility:read` and `visibility:write` scopes cover AI Visibility,
+  backlinks, and Reddit Opportunities. AI Visibility checks use observations.
+- The edit tools of the workspace, content, and visibility areas also need the
+  read scope of their area, and `publish_draft` also needs `content:read`.
+  Each section of `get_project` needs the scope of its data.
 - If the Connected App does not have a scope, the server refuses the tools that
   need it with an HTTP 403 `insufficient_scope` response. This occurs when
   you cleared the scope on the consent page, or when you connected Keytomic
