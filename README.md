@@ -24,6 +24,40 @@ Keytomic is also a connector in the
 This repository has no code. It gives the installation steps for each client.
 For more information, go to [keytomic.com/mcp](https://keytomic.com/mcp).
 
+## Plugins and listings
+
+- **ChatGPT and Codex**: the [Keytomic plugin](https://chatgpt.com/plugins/plugin_asdk_app_6ae3e39ed13c81919864cca28b02d8ec) is live in the
+  ChatGPT plugin directory.
+- **Claude**: the [Keytomic connector](https://claude.ai/directory/keytomic) and
+  the Keytomic plugin are listed in the Claude directory. To find the plugin,
+  open **Customize > Plugins** on claude.ai. The source of the plugin is
+  [keytomic-claude-plugin](https://github.com/epicx-labs/keytomic-claude-plugin).
+- **Cursor**: install the plugin from its repository,
+  [keytomic-cursor-plugin](https://github.com/epicx-labs/keytomic-cursor-plugin).
+
+This README is the main documentation for the Keytomic MCP server and the
+plugins. The plugin repositories have only the plugin files.
+
+The Claude and Cursor plugins add the same server and these ten skills:
+
+| Skill | Use it for |
+| --- | --- |
+| `website-audit` | Run or read a Website Audit and get a report of the findings |
+| `search-console-review` | Answer questions about Google Search performance with the insight tools |
+| `analytics` | Report the Google Analytics 4 traffic and events of a site |
+| `workspace-setup` | Read and edit the brand profile, the settings and the author profiles, and read the integrations |
+| `content-calendar` | Research keywords, plan and edit the calendar topics, start a calendar run, write and edit articles, and generate hero images |
+| `publishing` | Publish an article to a connected CMS as a draft or live, and check where it was published |
+| `indexing` | Read the indexing status of pages on Google and Bing, inspect URLs, and submit URLs and sitemaps |
+| `backlinks` | Read the backlinks and the backlink gaps of a site, and set the competitors of the gap list |
+| `reddit-opportunities` | Find Reddit threads to answer, write reply drafts, and change the scan settings |
+| `ai-visibility` | Set up AI Visibility, edit the prompts and the settings, run a check, and read the report |
+
+The plugins have no code of their own. Each plugin declares one remote MCP
+server, `https://app.keytomic.com/mcp`, and its skills are text files. Your
+client sends each tool call to that server with your sign-in token. The plugins
+send data to no other destination.
+
 ## Keytomic: the end-to-end AI SEO agent
 
 Keytomic is the AI SEO agent that runs the whole SEO cycle for your site, for
@@ -72,13 +106,24 @@ plugin for Claude adds the same server and ten skills. The skills are SEO
 audits, Search Console review, Google Analytics, workspace setup, the content
 calendar with keyword research, articles, and hero images, and publishing.
 The other skills are indexing, backlinks, Reddit Opportunities, and AI
-Visibility.
+Visibility. To add the plugin, open **Customize > Plugins** on claude.ai. Each
+new version needs a directory review, so the directory version can be older
+than the repository.
 
 ### ChatGPT
 
-Full MCP support in ChatGPT is available only on the ChatGPT Business,
-Enterprise, and Edu plans. Use ChatGPT on the web. On a Business plan, an admin
-or owner adds the server. Developer mode is not necessary.
+Keytomic is a plugin in the ChatGPT plugin directory.
+
+1. On ChatGPT Enterprise or Edu, an admin must turn on the plugin first.
+2. Open [Keytomic in ChatGPT Plugins](https://chatgpt.com/plugins/plugin_asdk_app_6ae3e39ed13c81919864cca28b02d8ec).
+3. Click **Install plugin**, sign in to Keytomic, and approve.
+
+Install access depends on your ChatGPT plan, workspace, role, and region.
+
+You can also add Keytomic as a custom MCP server. This is available only on the
+ChatGPT Business, Enterprise, and Edu plans. Use ChatGPT on the web. On a
+Business plan, an admin or owner adds the server. Developer mode is not
+necessary.
 
 1. Go to **Plugins**.
 2. Click **+**, then click **Add custom MCP server**.
@@ -111,6 +156,19 @@ command:
 claude plugin install keytomic --marketplace epicx-labs/keytomic-claude-plugin
 ```
 
+This command needs Claude Code 2.1.292 or later. Inside a Claude Code session,
+run this command:
+
+```text
+/plugin install keytomic --marketplace epicx-labs/keytomic-claude-plugin
+```
+
+For one session only, run this command from a clone of the plugin repository:
+
+```bash
+claude --plugin-dir ./keytomic-claude-plugin
+```
+
 ### Cursor
 
 [![Add Keytomic MCP to Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=keytomic&config=eyJ1cmwiOiJodHRwczovL2FwcC5rZXl0b21pYy5jb20vbWNwIn0=)
@@ -135,9 +193,28 @@ You can also add the server yourself:
 3. Sign in to Keytomic when Cursor asks.
 
 The [AI SEO with Keytomic for Cursor](https://github.com/epicx-labs/keytomic-cursor-plugin)
-plugin adds the same server and the ten skills to Cursor.
+plugin adds the same server and the ten skills to Cursor. It needs Cursor 2.5 or
+later. Copy the repository to your local Cursor plugins folder, then run
+**Developer: Reload Window**:
+
+```bash
+git clone https://github.com/epicx-labs/keytomic-cursor-plugin ~/.cursor/plugins/local/keytomic
+```
+
+On Cursor Teams and Enterprise, an admin can import the plugin repository as a
+team marketplace. The repository has a `.cursor-plugin/marketplace.json` for
+this.
 
 ### Codex
+
+Codex uses the same plugin as ChatGPT.
+
+1. Sign in to Codex with your ChatGPT account, not an API key.
+2. In the ChatGPT desktop app, open **Plugins** and install Keytomic. In Codex
+   CLI, run `/plugins` and install Keytomic.
+3. Sign in to Keytomic, approve, then start a new Codex chat or CLI session.
+
+You can also add the server by hand:
 
 1. Add this to `~/.codex/config.toml`:
 
@@ -403,7 +480,9 @@ The publishing tools also return these errors:
   This error is not the `permission_denied` tool error, and a role change does
   not correct it. The other tools continue to operate. To correct it:
   1. Sign in to Keytomic again in your client and approve all the scopes. In
-     Claude Code, run `/mcp`, select **keytomic**, and sign in again.
+     Claude Code, run `/mcp`, select **keytomic**, and sign in again. In Cursor,
+     open **Customize**, find **keytomic** under the MCP servers, log out, and
+     sign in again.
   2. If the error continues, open the **Keytomic MCP** page in Keytomic and
      click **Disconnect** on the row of the app under **Connected apps**. Then
      connect Keytomic again and approve all the scopes.
