@@ -21,7 +21,9 @@ Keytomic account. You do not need an API key, and you do not install software.
 Keytomic is also a connector in the
 [Claude directory](https://claude.ai/directory/keytomic).
 
-This repository has no code. It gives the installation steps for each client.
+This repository has no code. It has the installation steps for each client and
+the registry files: `server.json` (MCP Registry), `glama.json` (Glama), and
+`gemini-extension.json` (Gemini CLI).
 For more information, go to [keytomic.com/mcp](https://keytomic.com/mcp).
 
 ## Plugins and listings
@@ -226,6 +228,15 @@ You can also add the server by hand:
 2. Restart Codex and sign in to Keytomic when it prompts you.
 
 ### Gemini CLI
+
+Install Keytomic as a Gemini CLI extension:
+
+```bash
+gemini extensions install https://github.com/epicx-labs/keytomic-mcp
+```
+
+Then restart Gemini CLI and sign in to Keytomic when it prompts you. You can
+also add the server by hand:
 
 1. Add this to `~/.gemini/settings.json`:
 

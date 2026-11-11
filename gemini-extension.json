@@ -1,0 +1,10 @@
+{
+  "name": "keytomic",
+  "version": "1.0.0",
+  "description": "Keytomic, the AI SEO agent: SEO audits, Search Console and GA4 data, keyword research, articles, publishing and AI visibility.",
+  "mcpServers": {
+    "keytomic": {
+      "httpUrl": "https://app.keytomic.com/mcp"
+    }
+  }
+}
