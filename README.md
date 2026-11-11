@@ -308,6 +308,9 @@ as the authentication.
   and the hero image show in the chat. When your connection can edit content,
   you can edit the title and the text of the article in the chat and save
   them, or select text and ask the assistant to change it.
+- **Structured data**: read the JSON-LD that a publish sends with an article,
+  and save the owner's Structured Data Edit. Only WordPress gets structured
+  data from Keytomic.
 - **Publishing**: list the publishing destinations of a site, publish an
   article to one of them as a draft or live, and check where each article was
   published.
@@ -447,6 +450,11 @@ The publishing tools also return these errors:
 | `publication_in_progress` | A publish of this article to this destination has not ended. Check it with `get_publication_status`. |
 | `publish_failed` | The destination did not confirm the publish, so the article may or may not be there. |
 | `article_slug_taken` | Another article of the site uses this slug. Change the slug with `update_draft`. |
+| `draft_not_publishable` | The article has no title, slug, text, or valid image URL yet. Edit it with `update_draft` first. |
+| `draft_replaced_by_refresh` | The site shows a refreshed version of the article. Edit and publish the refresh draft instead. |
+| `imported_post_publish_only` | The article is an imported post that is live on the site, and a draft would take it offline. Publish with mode `publish`. |
+| `imported_post_empty_body` | The article is an imported post with no body. Add the body first. |
+| `content_refresh_api_key_expired` | The Keytomic API key that the site reads has expired. The owner creates a new key in Keytomic at `fixUrl`. |
 
 ## Security model
 
