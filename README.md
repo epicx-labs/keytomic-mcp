@@ -1,7 +1,7 @@
 # Keytomic MCP
 
 Keytomic MCP brings Keytomic, the end-to-end AI SEO agent, to your AI
-assistant and connects it to your Keytomic workspace. Use it in Claude,
+assistant and connects it to your Keytomic workspaces. Use it in Claude,
 ChatGPT, Cursor, Claude Code, Codex, Gemini CLI, Windsurf, and other remote MCP
 clients. Ask questions about your Google Search Console data, run SEO audits of
 your site, read the fixes, read your Google Analytics traffic, and do keyword
@@ -277,9 +277,11 @@ as the authentication.
 
 ## Requirements
 
-- A Keytomic workspace on a paid plan or in a trial. If the workspace has no
-  active plan, or if it is still in Onboarding, the tools return an error with
-  a link to Keytomic.
+- A Keytomic workspace on a paid plan or in a trial. One connection works in
+  all the workspaces that you are a member of. A tool works on a site only when
+  the workspace of that site has an active plan and finished Onboarding. If it
+  does not, the tool returns an error with a link to Keytomic. `list_sites`
+  tells which of your workspaces are available.
 - A role in the workspace that gives the permission for the action. Each tool
   needs a workspace permission for its action. If your role does not give the
   permission, the tool returns the `permission_denied` error.
@@ -405,9 +407,9 @@ open.
 
 ## Limits and errors
 
-- Each user can make 60 tool calls each minute in one workspace. When you go
-  above the limit, the tool returns the `rate_limited` error with
-  `retryAfterSeconds`.
+- Each user can make 60 tool calls each minute, for all workspaces and
+  Connected Apps together. When you go above the limit, the tool returns the
+  `rate_limited` error with `retryAfterSeconds`.
 - A tool error is a JSON object with an `error` code and a `message`. Errors
   that you can correct in Keytomic also give a link.
 
@@ -416,14 +418,16 @@ return errors for an input that is not correct.
 
 | Error code | Cause |
 | --- | --- |
-| `subscription_required` | The workspace has no active plan. |
-| `onboarding_required` | The workspace did not complete Onboarding. |
+| `subscription_required` | The workspace of the site has no active plan. |
+| `onboarding_required` | The workspace of the site did not complete Onboarding. |
 | `permission_denied` | Your role in the workspace does not give the permission for the action. |
 | `usage_limit_reached` | The site or workspace used all of a Usage Limit, for example its keyword searches. |
 | `insufficient_credits` | The site does not have sufficient Article Credits or image credits (Blog Hero Credits) for the action. |
 | `project_spend_locked` | A Spend Lock stops paid actions on the site until the billing cycle ends. |
 | `rate_limited` | You made more than 60 tool calls in one minute. |
-| `workspace_access_revoked` | You are not a member of the workspace now. Connect Keytomic again. |
+| `unknown_project` | The `projectId` is not a site in one of your workspaces. Call `list_sites` for the valid sites. |
+| `no_workspace` | Your Keytomic account is not a member of a workspace. Create or join one in Keytomic, then connect Keytomic again. |
+| `no_available_workspace` | None of your workspaces can use MCP now. The error gives the reason for each workspace. |
 | `gsc_not_connected`, `gsc_reconnect_required` | The site has no working Search Console connection. |
 | `gsc_permission_denied` | The connected Google account does not have access to the property. |
 | `gsc_owner_permission_required` | A sitemap submit to Google needs an Owner or Full user of the property. |
@@ -469,8 +473,14 @@ The publishing tools also return these errors:
 
 ## Security model
 
-- You sign in with your Keytomic account through OAuth, and you select one
-  workspace. The server reads and writes only the data of that workspace.
+- You sign in with your Keytomic account through OAuth. If you are a member of
+  more than one workspace, you select the workspace that the app connects
+  through. The app then works in all the workspaces that you are a member
+  of, with the role that you have in each one. It cannot read the data of a
+  workspace that you are not a member of.
+- The workspace that the app connects through must keep a paid plan, and you
+  must stay a member of it. If not, the connection stops, and you must connect
+  Keytomic again.
 - The connection is a Connected App. Keytomic asks for these MCP Scopes:
   `workspace:read`, `workspace:write`, `audit:read`, `audit:run`, `gsc:read`,
   `content:read`, `content:write`, `content:publish`, `analytics:read`,
@@ -506,7 +516,8 @@ The publishing tools also return these errors:
      click **Disconnect** on the row of the app under **Connected apps**. Then
      connect Keytomic again and approve all the scopes.
 - You can disconnect the Connected App at any time on the **Keytomic MCP**
-  page in Keytomic, under **Connected apps**.
+  page in Keytomic, under **Connected apps**. Disconnect removes the app from
+  all your workspaces.
 
 Report vulnerabilities with the process in [SECURITY.md](SECURITY.md).
 
